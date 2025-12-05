@@ -11,7 +11,7 @@ func sameDigitWholeString(num string) bool {
 
 	numLen := len(num)
 
-	if numLen%2 != 0 {
+	if numLen < 2 {
 		return false
 	}
 
@@ -24,34 +24,50 @@ func sameDigitWholeString(num string) bool {
 	return true
 }
 
-func findInvalidPart2(num string) string {
+func isNumInvalidPart2(num string) bool {
 
-	repeating := false
 	strLen := len(num)
-
-	if sameDigitWholeString(num) {
-		return num
-	}
-
-	for i := 2; i <= strLen; i++ {
+	for i := 2; i < strLen/2; i++ {
 		if strLen%i == 0 {
 			cuts := strLen / i
 			for j := 1; j < cuts; j++ {
 				if strings.HasPrefix(num[j*i:], num[0:i]) {
-					repeating = true
+					if j == cuts-1 {
+						return true
+					}
+					continue
 				} else {
-					repeating = false
+					break
 				}
 			}
 		}
 	}
+	return false
+}
 
-	if !repeating {
-		return ""
+func findInvalidPart2(num string) string {
+
+	if sameDigitWholeString(num) || isNumInvalid(num) || isNumInvalidPart2(num) {
+		return num
 	}
 
-	fmt.Println("Repeting NUM: ", num)
-	return num
+	return ""
+}
+
+func isNumInvalid(num string) bool {
+	strlen := len(num)
+	if strlen%2 != 0 {
+		return false
+	}
+
+	leftPart := num[:strlen/2]
+	rightPart := num[strlen/2:]
+
+	if leftPart == rightPart {
+		return true
+	}
+
+	return false
 }
 
 func findInvalid(line string) (uint64, uint64) {
@@ -87,17 +103,11 @@ func findInvalid(line string) (uint64, uint64) {
 			totalPart2 += part2
 		}
 
-		strlen := len(str)
-		if strlen%2 != 0 {
+		if !isNumInvalid(str) {
 			continue
 		}
 
-		leftPart := str[:strlen/2]
-		rightPart := str[strlen/2:]
-
-		if leftPart == rightPart {
-			totalPart1 += i
-		}
+		totalPart1 += i
 	}
 
 	return totalPart1, totalPart2
@@ -130,5 +140,5 @@ func main() {
 	}
 
 	fmt.Println("The result for part 1 is: ", totalPart1)
-	fmt.Println("The result for part 2 is: ", totalPart1+totalPart2)
+	fmt.Println("The result for part 2 is: ", totalPart2)
 }
