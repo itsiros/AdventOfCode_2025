@@ -117,10 +117,8 @@ func main() {
 
 	if len(os.Args) != 2 {
 		fmt.Fprintln(os.Stderr, "No file")
+		return
 	}
-
-	file, _ := os.Open(os.Args[1])
-	defer file.Close()
 
 	buf, readErr := os.ReadFile(os.Args[1])
 	if readErr != nil {
