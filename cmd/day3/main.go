@@ -3,50 +3,44 @@ package main
 import (
 	"bufio"
 	"fmt"
-	"math"
 	"os"
 	"strconv"
 )
 
 const END = 12
 
-var log [4]int
-
 func findJoltsPart2(str string) uint64 {
 
-	var total uint64 = 0
-	var num int
+	var total string
 	start := 0
-	step := 4
-	var err error
 
-	for j := END; j >= 0; j-- {
-		big := 0
-		for i := start; i < start+step; i++ {
+	for j := range END {
+		var big byte = '0'
+		bigIndex := 0
+		step := len(str[start:]) - 11 + j
+		until := start + step
+		for i := start; i < until; i++ {
 			if start >= len(str) || i >= len(str) {
 				break
 			}
-			fmt.Println("i = ", i)
-			num, err = strconv.Atoi(string(str[i]))
-			if err != nil {
-				panic(err)
-			}
-			if num > big {
-				big = num
-				start += i + 1
-				step += i
-
+			if str[i] > big {
+				big = str[i]
+				bigIndex = i - start
+				start = i + 1
 			}
 		}
-		fmt.Println("j is: ", j)
-		fmt.Println("big: ", big)
-		powOfJ := math.Pow(float64(10), float64(j))
-		total += uint64(big * int(powOfJ))
 
-		fmt.Println("Total is: ", total)
+		step -= bigIndex
+		if big >= '1' && big <= '9' {
+			total += string(big)
+		}
 	}
 
-	return total
+	num, err := strconv.ParseUint(total, 10, 64)
+	if err != nil {
+		panic(err)
+	}
+	return num
 }
 
 func findJolts(str string) uint64 {
