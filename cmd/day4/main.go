@@ -1,12 +1,12 @@
 package main
 
 import (
+	"bytes"
 	"fmt"
 	"os"
-	"strings"
 )
 
-func countValid(input []string, r, c int) int {
+func countValid(input [][]byte, r, c int) int {
 	count := 0
 	rows := len(input)
 
@@ -37,20 +37,42 @@ func countValid(input []string, r, c int) int {
 	return 0
 }
 
-func main() {
+func part2(input [][]byte) int {
 
-	if len(os.Args) != 2 {
-		return
+	temp := input
+	total := 0
+
+	for {
+		count := 0
+
+		for row := range input {
+			for col := 0; col < len(input[row]); col++ {
+				if input[row][col] == '.' {
+					fmt.Print(".")
+					continue
+				}
+				if countValid(input, row, col) == 1 {
+					fmt.Print("x")
+					temp[row][col] = '.'
+					count++
+				} else {
+					fmt.Printf("%c", input[row][col])
+				}
+			}
+
+			fmt.Print("\n")
+		}
+		if count == 0 {
+			break
+		}
+		total += count
+		fmt.Print("\n")
+
 	}
+	return total
+}
 
-	buf, err := os.ReadFile(os.Args[1])
-	if err != nil {
-		fmt.Fprintln(os.Stderr, err)
-		return
-	}
-
-	input := strings.Split(string(buf), "\n")
-
+func part1(input [][]byte) int {
 	count := 0
 	for row := range input {
 		for col := 0; col < len(input[row]); col++ {
@@ -67,6 +89,25 @@ func main() {
 		}
 		fmt.Print("\n")
 	}
+	return count
+}
 
-	fmt.Println("Solution to part 1 is: ", count)
+func main() {
+
+	if len(os.Args) != 2 {
+		return
+	}
+
+	buf, err := os.ReadFile(os.Args[1])
+	if err != nil {
+		fmt.Fprintln(os.Stderr, err)
+		return
+	}
+
+	input := bytes.Fields(buf)
+
+	part1 := part1(input)
+	part2 := part2(input)
+	fmt.Println("Solution to part 1 is: ", part1)
+	fmt.Println("Solution to part 2 is: ", part2)
 }
