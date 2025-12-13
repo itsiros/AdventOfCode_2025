@@ -67,7 +67,6 @@ func part2(input [][]byte) int {
 		}
 		total += count
 		fmt.Print("\n")
-
 	}
 	return total
 }
