@@ -9,6 +9,24 @@ import (
 	"strings"
 )
 
+func doCalc(arr []uint64, isAdd bool) uint64 {
+	var res uint64 = 1
+	if isAdd {
+		res = 0
+	}
+
+	for a := range arr {
+		fmt.Print(arr[a], " ")
+		if isAdd {
+			res += arr[a]
+		} else {
+			res *= arr[a]
+		}
+	}
+	fmt.Println(" = ", res)
+	return res
+}
+
 func doMathPart2() uint64 {
 
 	buf, err := os.ReadFile(os.Args[1])
@@ -17,24 +35,50 @@ func doMathPart2() uint64 {
 	}
 
 	splited := bytes.Split(buf, []byte("\n"))
+	splited = splited[:len(splited) - 1]
 
 	numCols := len(splited)
 	numRows := len(splited[0])
 
-	fmt.Println("num of cols: ", numCols)
-	fmt.Println("num of rows: ", numRows)
-	for row := range numRows {
-		for col:= range numCols {
-			if string(splited[row][col]) == "" {
-				fmt.Print(" ")
-			} else {
+	var table [] uint64
+	var sign [] byte
 
-				fmt.Print(string(splited[row][col]))
+	for row := range numRows {
+		var s []byte
+		if splited[len(splited) - 1][row] != ' ' {
+			sign = append(sign, splited[len(splited) - 1][row])
+		}
+
+		for col := range numCols - 1 {
+			if splited[col][row] != ' ' {
+				s = append(s, splited[col][row])
 			}
 		}
-		fmt.Println()
+
+		if string(s) != "" {
+			num, err := strconv.ParseUint(string(s), 10, 64)
+			if err != nil {
+				panic(err)
+			}
+			table = append(table, num)
+		}
 	}
-	return 0
+
+	// for t := range table {
+	// 	fmt.Println(table[t])
+	// }
+	
+	i := numCols - 1
+	var total uint64 = 0
+	for j := 0; j * i + i <= len(table); j++ {
+		isAdd := false
+		if sign[j] == '+' {
+			isAdd = true
+		}
+		total += doCalc(table[j*i:i*j+i], isAdd)
+	}
+
+	return total
 }
 
 func doMath(table [][]string) int {
