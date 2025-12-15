@@ -9,21 +9,27 @@ import (
 	"strings"
 )
 
-func doCalc(arr []uint64, isAdd bool) uint64 {
+func doCalc(arr []string) uint64 {
 	var res uint64 = 1
-	if isAdd {
+
+	isAdd := false
+	if arr[0] == "+" {
+		isAdd = true
 		res = 0
 	}
 
-	for a := range arr {
-		fmt.Print(arr[a], " ")
+	for a := 1; a < len(arr); a++ {
+		num, err := strconv.ParseUint(arr[a], 10, 64)
+		if err != nil {
+			panic(err)
+		}
+
 		if isAdd {
-			res += arr[a]
+			res += num
 		} else {
-			res *= arr[a]
+			res *= num
 		}
 	}
-	fmt.Println(" = ", res)
 	return res
 }
 
@@ -35,18 +41,18 @@ func doMathPart2() uint64 {
 	}
 
 	splited := bytes.Split(buf, []byte("\n"))
-	splited = splited[:len(splited) - 1]
+	splited = splited[:len(splited)-1]
 
 	numCols := len(splited)
 	numRows := len(splited[0])
 
-	var table [] uint64
-	var sign [] byte
+	var table []string
 
 	for row := range numRows {
 		var s []byte
-		if splited[len(splited) - 1][row] != ' ' {
-			sign = append(sign, splited[len(splited) - 1][row])
+		sign := splited[len(splited)-1][row]
+		if sign != ' ' {
+			table = append(table, string(sign))
 		}
 
 		for col := range numCols - 1 {
@@ -56,28 +62,29 @@ func doMathPart2() uint64 {
 		}
 
 		if string(s) != "" {
-			num, err := strconv.ParseUint(string(s), 10, 64)
-			if err != nil {
-				panic(err)
-			}
-			table = append(table, num)
+			table = append(table, string(s))
 		}
 	}
 
 	// for t := range table {
 	// 	fmt.Println(table[t])
 	// }
-	
-	i := numCols - 1
-	var total uint64 = 0
-	for j := 0; j * i + i <= len(table); j++ {
-		isAdd := false
-		if sign[j] == '+' {
-			isAdd = true
-		}
-		total += doCalc(table[j*i:i*j+i], isAdd)
-	}
 
+	var total uint64 = 0
+	start := 0
+
+	for t := range table {
+		if t == 0 {
+			continue
+		}
+
+		if table[t] == "+" || table[t] == "*" {
+			total += doCalc(table[start:t])
+			start = t
+		}
+
+	}
+	total += doCalc(table[start:])
 	return total
 }
 
@@ -91,7 +98,7 @@ func doMath(table [][]string) int {
 	numRows := len(table)
 	numCols := len(table[0])
 
-	for col := range numCols{
+	for col := range numCols {
 		total := 0
 		isAdd := false
 		for row := 0; row < numRows-1; row++ {
