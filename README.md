@@ -21,12 +21,12 @@ This repository contains Go solutions organized by day, with:
 | 3 | ✅ | ✅ | Complete |
 | 4 | ✅ | ✅ | Complete |
 | 5 | ✅ | ✅ | Complete |
-| 6 | ✅ | ⏳ | Complete |
-| 7 | ✅ | ⏳ | Complete |
-| 8 | ⏳ | ⏳ | In Progress |
+| 6 | ✅ | ✅ | Complete |
+| 7 | ✅ | ✅ | Complete |
+| 8 | ✅ | ⏳ | In Progress |
 | 9 | ✅ | ⏳| Complete |
 | 10 | ⏳ | ⏳ | In Progress |
-| 11 | ⏳ | ⏳ | In Progress |
+| 11 | ✅ | ⏳ | In Progress |
 | 12 | ⏳ | ⏳ | In Progress |
 
 ## Project Structure
@@ -113,17 +113,6 @@ All solutions follow:
 - Clear variable names (avoid single-letter except loops)
 - Comments for non-obvious logic
 
-
-## Stats
-
-| Metric | Value |
-|--------|-------|
-| Days Complete | 7 / 25 |
-| Parts Solved | 9 / 50 |
-| Lines of Code | ~500 (estimated) |
-| Language | Go 1.25.4 |
-| Completions | In progress |
-
 ## Resources
 
 - **AoC Official:** https://adventofcode.com/2025
@@ -133,5 +122,3 @@ All solutions follow:
 ## License
 
 MIT — feel free to reference or adapt for learning.
-
----
